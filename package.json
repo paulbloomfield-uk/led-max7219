@@ -1,0 +1,40 @@
+{
+  "name": "led-max7219",
+  "version": "0.1.0-dev",
+  "description": "Use a MAX7219 driver for 7-segment or matrix LED displays on regular GPIO pins or SPI.",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && npm run test:unit",
+    "test:coverage": "jest test/unit --coverage",
+    "test:unit": "jest test/unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulbloomfield-uk/led-max7219.git"
+  },
+  "keywords": [
+    "max7219",
+    "7-segment",
+    "led-matrix",
+    "spi",
+    "gpio",
+    "raspberry",
+    "raspi",
+    "rpi",
+    "pi"
+  ],
+  "author": "pbuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paulbloomfield-uk/led-max7219/issues"
+  },
+  "homepage": "https://github.com/paulbloomfield-uk/led-max7219#readme",
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "jest": "^24.9.0"
+  }
+}

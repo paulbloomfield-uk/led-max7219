@@ -1,0 +1,6 @@
+## .gitignore
+
+node_modules/
+
+## Test coverage report.
+coverage/
