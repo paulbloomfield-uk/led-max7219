@@ -9,8 +9,8 @@ module.exports = {
 
   DECODE_MODE: 0x09, // 0 for none, 1 for digit 0 only, 0
   DECODE_MODE_NONE: 0,
-  DECODE_MODE_DIGIT_0: 1,
-  DECODE_MODE_LOW: 0x0f,
+  DECODE_MODE_DIGIT0: 1,
+  DECODE_MODE_LOWNYBBLE: 0x0f,
   DECODE_MODE_ALL: 0xff,
 
   // Display intensity (brightness); 0 (minimum) ... 0xf.
