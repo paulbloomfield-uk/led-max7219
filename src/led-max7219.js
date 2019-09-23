@@ -8,13 +8,33 @@ const LedMax7219Error = require('./led-max7219-error');
 
 // https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf.
 
+async function write(spi, data) {
+  try {
+    return spi.write(data);
+  } catch (err) {
+    throw new LedMax7219Error('Error writing to device', {
+      code: 'DeviceWriteError',
+      info: { err, data },
+    });
+  }
+}
+
+async function transferOut(spi, data) {
+  try {
+    return spi.transfer(data);
+  } catch (err) {
+    throw new LedMax7219Error('Error writing to device using transfer', {
+      code: 'DeviceWriteTransferError',
+      info: { err, data },
+    });
+  }
+}
+
 class LedMax7219 extends EventEmitter {
-  constructor(spi, options) {
+  constructor(options) {
     super();
 
     // Configure this instance.
-    this.spi = spi;
-
     this.settings = {
       length: 8,
       decode: false,
@@ -23,7 +43,13 @@ class LedMax7219 extends EventEmitter {
       ...options,
     };
     this.opCodes = this.settings.opCodes;
-    this.reset().then(this.emit('ready'));
+  }
+
+  async open(spi) {
+    this.spi = spi;
+    // Bind the correct version of write.
+    this.writeImplementation = this.spi.write ? write : transferOut;
+    return this.reset();
   }
 
   async reset() {
@@ -42,7 +68,11 @@ class LedMax7219 extends EventEmitter {
     await this.clear();
 
     // Wake the display up.
-    return this.shutdown(false);
+    await this.shutdown(false);
+
+    this.emit('ready', true);
+
+    return true;
   }
 
   async clear() {
@@ -51,6 +81,15 @@ class LedMax7219 extends EventEmitter {
       done.push(this.setPattern(0, i));
     }
     return Promise.all(done);
+  }
+
+  emit(type, value) {
+    super.emit(type, value, {
+      type,
+      value,
+      target: this,
+      timestamp: Date.now(),
+    });
   }
 
   async setDecodeMode(mode) {
@@ -81,7 +120,8 @@ class LedMax7219 extends EventEmitter {
     } else if (typeof level === 'string') {
       levelValue = this.opCodes[`INTENSITY_${level.toUpperCase()}`];
     }
-    if (typeof levelValue !== 'number' || levelValue || Math.floor(levelValue)) {
+
+    if (!Number.isInteger(levelValue)) {
       throw new LedMax7219Error('Invalid value passed to setIntensity', {
         code: 'InvalidIntensity',
         info: level,
@@ -110,7 +150,7 @@ class LedMax7219 extends EventEmitter {
 
   async write(...args) {
     try {
-      this.spi.writeSync(args);
+      return this.writeImplementation(this.spi, args);
     } catch (err) {
       throw new LedMax7219Error('Error writing to device', {
         code: 'DeviceWriteError',
