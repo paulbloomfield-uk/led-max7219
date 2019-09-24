@@ -2,6 +2,7 @@
 
 version: 2
 
+# Shared configuration for all jobs
 shared: &shared
 
     working_directory: ~/repo
@@ -15,7 +16,10 @@ shared: &shared
 
       - run:
           name: Report versions
-          command: node --version && npm --version && cat /etc/os-release
+          command: |
+            node --version
+            npm --version
+            grep -iE "^(NAME|VERSION)=" /etc/os-release
 
       # Restore cached dependencies
       - restore_cache:
@@ -42,19 +46,16 @@ shared: &shared
           command: npm run test
 
 jobs:
-  # Node 12 --------------------------------------------------------------------
   node-12:
     <<: *shared
     docker:
       - image: circleci/node:12
 
-  # Node 10 --------------------------------------------------------------------
   node-10:
     <<: *shared
     docker:
       - image: circleci/node:10
 
-  # Node 8 ---------------------------------------------------------------------
   node-8:
     <<: *shared
     docker:

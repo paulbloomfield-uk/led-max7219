@@ -2,6 +2,10 @@
   "name": "led-max7219",
   "version": "0.1.0-dev",
   "description": "Use a MAX7219 driver for 7-segment or matrix LED displays on regular GPIO pins or SPI.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paulbloomfield-uk/led-max7219.git"
+  },
   "main": "src/led-max-7219.js",
   "scripts": {
     "lint": "eslint .",
