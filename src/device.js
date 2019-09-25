@@ -16,25 +16,26 @@ async function write(conn, data) {
 }
 
 async function transferOut(conn, data) {
-  let message;
-  try {
-    message = {
-      byteLength: data.length,
-      sendBuffer: Buffer.from(data),
-      // This seems to be required for a MAX7219.
-      chipSelectChange: true,
-    };
-    return new Promise((resolve) => {
-      conn.transfer(message, {}, () => {
-        resolve(data.length);
-      });
+  const message = {
+    byteLength: data.length,
+    sendBuffer: Buffer.from(data),
+    // This seems to be required for a MAX7219.
+    chipSelectChange: true,
+  };
+
+  return new Promise((resolve, reject) => {
+    conn.transfer(message, {}, (error, msg) => {
+      if (error) {
+        reject(new DeviceError(`Error writing to device: ${error.message}`, {
+          code: 'DeviceWriteMessageError',
+          /* eslint-disable-next-line object-curly-newline */
+          info: { error, data, message, conn },
+        }));
+      } else {
+        resolve(msg.byteLength);
+      }
     });
-  } catch (err) {
-    throw new DeviceError(`Error writing to device: ${err.message}`, {
-      code: 'DeviceWriteMessageError',
-      info: { error: err, data, message },
-    });
-  }
+  });
 }
 
 class Device extends EventEmitter {
