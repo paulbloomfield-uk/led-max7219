@@ -17,8 +17,11 @@ shared: &shared
       - run:
           name: Report versions
           command: |
+            echo -n "Node "
             node --version
+            echo -n "npm "
             npm --version
+            echo OS
             grep -iE "^(NAME|VERSION)=" /etc/os-release
 
       # Restore cached dependencies

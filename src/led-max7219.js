@@ -20,12 +20,19 @@ async function write(spi, data) {
 }
 
 async function transferOut(spi, data) {
+  let message;
   try {
-    return spi.transfer(data);
+    message = {
+      byteLength: data.length,
+      sendBuffer: Buffer.from(data),
+      // This seems to be required for a MAX7219.
+      chipSelectChange: true,
+    };
+    return spi.transfer(message);
   } catch (err) {
-    throw new LedMax7219Error('Error writing to device using transfer', {
-      code: 'DeviceWriteTransferError',
-      info: { err, data },
+    throw new LedMax7219Error('Error transferring data to device', {
+      code: 'DeviceTransferOutError',
+      info: { err, data, message },
     });
   }
 }

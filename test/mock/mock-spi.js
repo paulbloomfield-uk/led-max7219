@@ -13,6 +13,15 @@ class MockSpi {
     });
   }
 
+  async transfer(message) {
+    this.log('transfer', message);
+    const { byteLength, sendBuffer } = message;
+    if (message.sendBuffer && (byteLength < sendBuffer.length)) {
+      throw new Error('byteLength must be >= sendBuffer.length');
+    }
+    return sendBuffer && sendBuffer.length;
+  }
+
   async write(bytes) {
     this.log('write', bytes);
     return bytes.length;
