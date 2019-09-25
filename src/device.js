@@ -32,6 +32,7 @@ async function transferOut(conn, data) {
           info: { error, data, message, conn },
         }));
       } else {
+        console.log('Sent', msg[0].sendBuffer);
         resolve(msg[0].byteLength);
       }
     });
