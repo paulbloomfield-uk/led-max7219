@@ -24,7 +24,7 @@ async function transferOut(conn, data) {
   };
 
   return new Promise((resolve, reject) => {
-    conn.transfer(message, {}, (error, msg) => {
+    conn.transfer(message, (error, msg) => {
       if (error) {
         reject(new DeviceError(`Error writing to device: ${error.message}`, {
           code: 'DeviceWriteMessageError',
