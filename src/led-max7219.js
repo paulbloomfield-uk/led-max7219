@@ -95,17 +95,17 @@ class LedMax7219 extends Device {
   }
 
   async setPattern(pattern, digit) {
-    return this.write(digit + 1, pattern);
+    return this.write([digit + 1, pattern]);
   }
 
   async shutdown(shutdown) {
     const status = shutdown === false ? 1 : 0;
-    return this.write(this.opCodes.SHUTDOWN, status);
+    return this.write([this.opCodes.SHUTDOWN, status]);
   }
 
   async test(on) {
     const status = on === false ? 0 : 1;
-    return this.write(this.opCodes.DISPLAY_TEST, status);
+    return this.write([this.opCodes.DISPLAY_TEST, status]);
   }
 }
 

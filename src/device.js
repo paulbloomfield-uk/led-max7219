@@ -32,7 +32,7 @@ async function transferOut(conn, data) {
           info: { error, data, message, conn },
         }));
       } else {
-        resolve({ message, msg, byteLength: msg.byteLength });
+        resolve(msg[0].byteLength);
       }
     });
   });
@@ -128,7 +128,10 @@ class Device extends EventEmitter {
    *
    * @param  {...Number} data
    */
-  async write(...data) {
+  async write(...args) {
+    // Allow calling with an array of data.
+    const data = args[0][0] ? args[0] : args;
+
     try {
       return this.writeImplementation(this.conn, data);
     } catch (error) {
