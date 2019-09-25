@@ -32,7 +32,7 @@ async function transferOut(conn, data) {
           info: { error, data, message, conn },
         }));
       } else {
-        resolve(msg.byteLength);
+        resolve({ message, msg, byteLength: msg.byteLength });
       }
     });
   });
