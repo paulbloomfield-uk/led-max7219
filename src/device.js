@@ -16,12 +16,12 @@ async function write(conn, data) {
 }
 
 async function transferOut(conn, data) {
-  const message = {
+  const message = [{
     byteLength: data.length,
     sendBuffer: Buffer.from(data),
     // This seems to be required for a MAX7219.
     chipSelectChange: true,
-  };
+  }];
 
   return new Promise((resolve, reject) => {
     conn.transfer(message, (error, msg) => {
