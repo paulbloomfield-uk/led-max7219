@@ -1,6 +1,7 @@
 // ./src/device.js
 
 const { EventEmitter } = require('events');
+const { promisify } = require('util');
 
 const DeviceError = require('./device-error');
 
@@ -24,7 +25,7 @@ async function transferOut(conn, data) {
       // This seems to be required for a MAX7219.
       chipSelectChange: true,
     };
-    return conn.transfer(message);
+    return promisify(conn.transfer)(message);
   } catch (err) {
     throw new DeviceError(`Error writing to device: ${err.message}`, {
       code: 'DeviceWriteMessageError',
